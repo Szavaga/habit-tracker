@@ -16,6 +16,14 @@ def save(data):
     with open(FILE, "w") as f:
         json.dump(data, f, indent=2)
 
+@app.route("/delete/<name>")
+def delete(name):
+    data = load()
+    if name in data:
+        del data[name]
+        save(data)
+    return redirect("/")
+    
 @app.route("/")
 def index():
     data = load()
