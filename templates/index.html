@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Habit Tracker</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #333; }
+        .habit { display: flex; justify-content: space-between; align-items: center; padding: 10px; margin: 8px 0; background: #f5f5f5; border-radius: 8px; }
+        .done { background: #d4edda; }
+        a { text-decoration: none; background: #28a745; color: white; padding: 5px 12px; border-radius: 5px; font-size: 14px; }
+        input { padding: 8px; width: 70%; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        form { margin-top: 24px; display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Habit Tracker</h1>
+
+    {% for habit, days in habits.items() %}
+    <div class="habit {% if today in days %}done{% endif %}">
+        <span>{% if today in days %}✓{% else %}✗{% endif %} {{ habit }} — {{ days|length }} day(s)</span>
+        {% if today not in days %}
+        <a href="/done/{{ habit }}">Mark Done</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <form action="/add" method="post">
+        <input type="text" name="name" placeholder="New habit..." required>
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>
