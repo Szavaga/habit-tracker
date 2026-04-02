@@ -30,6 +30,38 @@ def save_users(data):
     with open(USERS_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
+def calculate_streak(days):
+    if not days:
+        return 0
+    sorted_days = sorted(days, reverse=True)
+    streak = 0
+    check_date = date.today()
+    for day in sorted_days:
+        if str(check_date) == day:
+            streak += 1
+            check_date = date.fromordinal(check_date.toordinal() - 1)
+        else:
+            break
+    return streak
+
+@app.route("/leaderboard")
+def leaderboard():
+    if "username" not in session:
+        return redirect("/login")
+    all_habits = load_habits()
+    rankings = []
+    for username, habits in all_habits.items():
+        total_streak = sum(calculate_streak(days) for days in habits.values())
+        total_days = sum(len(days) for days in habits.values())
+        rankings.append({
+            "username": username,
+            "total_streak": total_streak,
+            "total_days": total_days,
+            "habit_count": len(habits)
+        })
+    rankings.sort(key=lambda x: x["total_streak"], reverse=True)
+    return render_template("leaderboard.html", rankings=rankings, current_user=session["username"])
+    
 @app.route("/")
 def index():
     if "username" not in session:
@@ -38,7 +70,8 @@ def index():
     all_habits = load_habits()
     habits = all_habits.get(username, {})
     today = str(date.today())
-    return render_template("index.html", habits=habits, today=today, username=username)
+    streaks = {habit: calculate_streak(days) for habit, days in habits.items()}
+    return render_template("index.html", habits=habits, today=today, username=username, streaks=streaks)
 
 @app.route("/add", methods=["POST"])
 def add():
