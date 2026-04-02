@@ -1,12 +1,11 @@
 {
-  "Simon Szabolcs": [
-    "2026-04-02"
-  ],
-  "Reading": [
-    "2026-04-02"
-  ],
-  "Szavaga": {
-    "Drink water": [
+  "test": {
+    "drunk": [
+      "2026-04-02"
+    ]
+  },
+  "test2": {
+    "drink": [
       "2026-04-02"
     ]
   }
