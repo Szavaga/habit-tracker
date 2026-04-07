@@ -45,7 +45,21 @@ def show_habits(data):
     today = str(date.today())
     for habit, days in data.items():
         done_today = "✓" if today in days else "✗"
-        print(f"  {done_today} {habit} — {len(days)} day(s) logged")
+        print(f"  {done_today} {habit} — 🔥 {calculate_streak(days)} day streak ({len(days)} total)")
+
+def calculate_streak(days):
+    if not days:
+        return 0
+    sorted_days = sorted(days, reverse=True)
+    streak = 0
+    check_date = date.today()
+    for day in sorted_days:
+        if str(check_date) == day:
+            streak += 1
+            check_date = date.fromordinal(check_date.toordinal() - 1)
+        else:
+            break
+    return streak
 # The main function runs the command-line interface for the habit tracker, allowing users to add habits, mark them as done, view their habits, or quit the program.
 def main():
     data = load()
